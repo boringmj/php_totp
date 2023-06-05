@@ -56,8 +56,10 @@ class TOTP {
         $offset=$data[count($data)-1]%$length;
         // 从偏移量开始循环取出length长度的数据
         $code='';
+        $data_length=count($data);
+        $chars_length=strlen($this->chars);
         for($i=0;$i<$length;$i++) {
-            $value=$data[($offset+$i)%count($data)]%32;
+            $value=$data[($offset+$i)%$data_length]%$chars_length;
             $code.=$this->chars[$value];
         }
         // 返回验证码
