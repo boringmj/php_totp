@@ -104,13 +104,42 @@ class TOTP {
         return false;
     }
 
+    /**
+     * 计算时间戳还有多少秒过期
+     * 
+     * @param int $period 周期
+     * @param int $timestamp 时间戳
+     * @access public
+     * @return int
+     */
+    public function expires(int $period=30,int $timestamp=null) {
+        // 取得当前时间片(周期)
+        $time=floor(($timestamp?:time())/$period);
+        // 计算下一个时间片(周期)
+        $time=$time+1;
+        // 返回还有多少秒过期
+        return $time*$period-($timestamp?:time());
+    }
+
 }
 
 /**
  * 实例
  */
 $totp=new TOTP(base64_encode('as1ds24fd0fg1t5g'));
-$code=$totp->generate();
+
+// $code=$totp->generate();
 // sleep(30);
-$verify=$totp->verify($code);
-echo "当前验证码: {$code}\n当前验证结果: ".($verify?'成功':'失败')."\n";
+// $verify=$totp->verify($code);
+// echo "当前验证码: {$code}\n当前验证结果: ".($verify?'成功':'失败')."\n";
+
+$verify=$totp->verify('QHRA3N');
+echo "当前验证结果: ".($verify?'成功':'失败')."\n";
+
+while(true) {
+    $code=$totp->generate();
+    // 计算出还有多少秒过期
+    $end=$totp->expires();
+    echo "当前验证码: {$code} | 过期时间: {$end}\n";
+    sleep(1);
+}
