@@ -142,6 +142,10 @@ while(true) {
     $code=$totp->generate();
     // 计算出还有多少秒过期
     $end=$totp->expires();
+    // 把控制台的内容清空
+    echo chr(27).chr(91).'H'.chr(27).chr(91).'J';
+    // 输出当前验证码和过期时间
     echo "当前验证码: {$code} | 过期时间: {$end}\n";
-    sleep(1);
+    // 休眠0.01秒
+    usleep(10000);
 }
